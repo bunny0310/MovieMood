@@ -1,0 +1,26 @@
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/v4-shims.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script>
+$.ajax({
+      url: "http://www.omdbapi.com/?apikey=b9eedfe8&t=<%=title%>" ,
+        dataType: 'jsonp',
+        success: function(data){
+        	$("#message").html('<div style="margin-top:-50px;" class="alert alert-info">You seem to be quite <%=mood%>. You should watch '+data.Title+'. <a href="https://imdb.com/title/'+data.imdbID+'">Click here</a> to view it\'s IMDB page.</div><br><img src="'+data.Poster+'" height="350" width="250">');
+        }
+    });
+
+</script>
+</head>
+<div id="message">
+	
+</div>

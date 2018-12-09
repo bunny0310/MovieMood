@@ -1,0 +1,141 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/v4-shims.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<style>
+	      	video {
+	      		position:absolute;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+#image
+{
+	position:fixed;
+	z-index: 9999;
+	  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+</style>
+  </head>
+  <body onload="init();">
+  	<div class="jumbotron jumbotron-fluid">
+	  <div class="container">
+			 <center><h1 style="font-family:'courier'"><i class="fas fa-smile"></i><i class="fas fa-film"></i> Movie Mood</h1>
+			 </center>
+	  </div>
+	</div>
+       <button onclick="snapshot();" id="snapshot" class="btn btn-primary">Take Snapshot</button>
+       <button onclick="restart();" id="retake" style="display:none" class="btn btn-info">Retake</button> 
+		<br><br>
+    <div id="content">
+    <div class="row">
+		<div class="col col-md-8">
+	    	<canvas id="myCanvas" style="display:none" height="480" width="720"></canvas><video style="" onclick="snapshot(this);" width="900" height="380" id="video" style="float:left;" autoplay></video><img src="" id="image" height="380" width="720" style="display:none;position:relative;top:40px;left:40px">
+	    </div>
+	 	<div class="col col-md-4">
+	 		<p id="message">
+	 			
+	 		</p>
+	 	</div>
+	 </div>
+	</div>
+  </body>
+  <script>
+      //--------------------
+      // GET USER MEDIA CODE
+      //--------------------
+      $(document).ready(function(){
+      	startWebcam();
+      });
+          navigator.getUserMedia = ( navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia);
+
+      var video;
+      var webcamStream;
+
+      function startWebcam() {
+        if (navigator.getUserMedia) {
+           navigator.getUserMedia (
+
+              // constraints
+              {
+                 video: true,
+                 audio: false
+              },
+
+              // successCallback
+              function(localMediaStream) {
+                  video = document.querySelector('video');
+                 video.src = window.URL.createObjectURL(localMediaStream);
+                 webcamStream = localMediaStream;
+              },
+
+              // errorCallback
+              function(err) {
+                 console.log("The following error occured: " + err);
+              }
+           );
+        } else {
+           console.log("getUserMedia not supported");
+        }  
+      }
+      //---------------------
+      // TAKE A SNAPSHOT CODE
+      //---------------------
+      var canvas, ctx;
+
+      function init() {
+        // Get the canvas and obtain a context for
+        // drawing in getElementById("myCanvas");
+ canvas=document.getElementById("myCanvas");
+ctx = canvas.getContext('2d');
+      }
+
+      function snapshot() {
+      	$("#snapshot").css("display","none");
+      	$("#retake").css("display","block");
+      	$("#video").css("display","none");
+      	var track = webcamStream.getTracks()[0];  // if only one media track
+// ...
+		track.stop();
+         // Draws current image from the video element into the canvas
+        ctx.drawImage(video, 0,0, video.width, video.height);
+      	var img=canvas.toDataURL("image/jpeg");
+      	$("#image").attr("src",img);
+      	$("#image").css("display","block");
+      	var data = img.replace(/^data:image\/jpeg;base64,/,"");
+      	$.post("/recognize",{data:data},function(data){
+      		if(data=="error" || data=="error1")
+      		{
+      			$("#message").html('<div class="alert alert-danger">Face not detected. Please try again!</div>');
+      		}
+      		else
+      		{
+      			$("#message").html(data);
+      		}
+      	});
+      }
+      function restart()
+      {
+      	$("#snapshot").css("display","block");
+      	$("#retake").css("display","none");
+      	startWebcam();
+      	$("#myCanvas").css("display","none");
+      	$("#image").css("display","none");
+      	$("#video").css("display","block");
+      }
+
+  </script>
+</html>

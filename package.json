@@ -1,0 +1,33 @@
+{
+  "name": "moviemood",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "@google-cloud/vision": "^0.23.0",
+    "cookie-parser": "~1.4.3",
+    "csv-array": "0.0.22",
+    "csv-parser": "^2.1.0",
+    "csvtojson": "^2.0.8",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.16.0",
+    "express-session": "^1.15.6",
+    "fast-csv": "^2.4.1",
+    "fs": "0.0.1-security",
+    "http-errors": "~1.6.2",
+    "https": "^1.0.0",
+    "imdb-api": "^4.0.2",
+    "morgan": "~1.9.0",
+    "node-webcam": "^0.4.6",
+    "request": "^2.88.0",
+    "sts": "^3.0.2",
+    "sys": "0.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  }
+}
